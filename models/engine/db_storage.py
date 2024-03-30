@@ -109,3 +109,26 @@ class DBStorage:
             instance_key = instance.__class__.__name__ + '.' + instance.id
             final[instance_key] = instance
         return(final)
+
+    def get(self, cls, id) -> dict:
+        """retrieve one object based on cls and id
+        Args:
+            cls: class of the object
+            id: Id of the object
+        Return: object based on the class and its ID, or None
+        """
+        q = self.__session.query(cls).filter_by(id=id).one_or_none()
+        if q:
+            return(q)
+
+    def count(self, cls=None) -> int:
+        """count the number of objects in storage:
+        Args:
+            cls: class of the objects
+        Return: number of objects in storage matching the given class
+                if no class is passed,
+                returns the count of all objects in storage.
+        """
+        if cls:
+            return(len(self.all(cls)))
+        return(len(self.all()))
