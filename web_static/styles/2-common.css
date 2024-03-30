@@ -1,0 +1,8 @@
+/* common css in this file */
+body {
+    margin: 0 auto;
+    padding: 0;
+}
+.container {
+    max-width: 1000px;
+}
