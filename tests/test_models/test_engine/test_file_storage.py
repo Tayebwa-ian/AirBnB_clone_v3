@@ -26,9 +26,12 @@ class Test_file_storage(unittest.TestCase):
         """Test the return value of all function"""
         with open(self.file_path, "r") as file:
             data = json.load(file)
+        self.user.save()
         key = self.user.__class__.__name__ + ".{}".format(self.user.id)
         data[key] = self.user.to_dict()
-        self.assertEqual(data, storage.all(), "stored data differing")
+        all_dict = {key: storage.all()[key].to_dict()
+                    for key in storage.all().keys()}
+        self.assertEqual(data, all_dict, "stored data differing")
 
     def test_file_update(self) -> None:
         """Check if the json file is updated with new obj
@@ -36,6 +39,7 @@ class Test_file_storage(unittest.TestCase):
         """
         with open(self.file_path, "r") as file:
             data = json.load(file)
+        self.user.save()
         self.assertEqual(len(data) + 1, len(storage.all()),
                          "")
 

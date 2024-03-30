@@ -10,6 +10,7 @@ from ..place import Place
 from ..review import Review
 from ..state import State
 from ..user import User
+from ..base_model import BaseModel
 from os import getenv
 
 
@@ -19,7 +20,8 @@ classes = {
     "Review": Review,
     "Place": Place,
     "City": City,
-    "Amenity": Amenity
+    "Amenity": Amenity,
+    "BaseModel": BaseModel,
     }
 
 
@@ -33,7 +35,7 @@ class FileStorage:
         __objects: dictionary - empty but will store all objects
                     by <class name>.id
     """
-    __file_path = getenv("HBNB_TYPE_STORAGE")
+    __file_path = "file.json"
     __objects = {}
 
     def all(self, cls=None) -> dict:
