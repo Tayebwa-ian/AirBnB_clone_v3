@@ -21,6 +21,7 @@ class Test_file_storage(unittest.TestCase):
                                             inspect.ismethod)]
         cls.file_path = "file.json"
         cls.user = User()
+        cls.user2 = User(first_name="Denash")
 
     def test_return_value_of_all_function(self) -> None:
         """Test the return value of all function"""
@@ -57,6 +58,22 @@ class Test_file_storage(unittest.TestCase):
         style_checker = pycodestyle.StyleGuide()
         result = style_checker.check_files(['models/engine/file_storage.py'])
         self.assertEqual(result.total_errors, 0, "PEP 8 violations found")
+
+    def test_get_function(self) -> None:
+        """test retrieving of a single object"""
+        obj = self.user2
+        obj.save()
+        result = storage.get(User, self.user2.id)
+        self.assertEqual(obj.id, result.id,
+                         "A single object can not be retrieved")
+
+    def test_count_function(self) -> None:
+        """Check if the correct number of all object in storage is returned"""
+        with open(self.file_path, "r") as file:
+            data = json.load(file)
+        self.assertEqual(len(data), len(storage.all()),
+                         "Incorrect count for the number \
+                            of objects in file storage")
 
 
 if __name__ == "__main__":
