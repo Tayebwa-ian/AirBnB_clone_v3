@@ -20,11 +20,11 @@ class Test_state(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         """Setup model instance to use in the test cases"""
-        cls.s1 = state.State()
-        cls.s2 = state.State()
+        cls.s1 = state.State(name="Congo")
+        cls.s2 = state.State(name="Tanzania")
         cls.out_dict = cls.s1.to_dict()
         cls.temp_dict = {
-            "name": "Ankole",
+            "name": "Somalia",
             "__class__": "State",
             "updated_at": "2017-09-28T21:05:54.119572",
             "id": "b6a6e15c-c67d-4312-9a75-9d084935e579",

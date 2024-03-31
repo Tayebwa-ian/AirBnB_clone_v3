@@ -8,6 +8,9 @@ import inspect
 import models
 
 place = models.place
+user = models.user
+city = models.city
+state = models.state
 
 
 class Test_base_model(unittest.TestCase):
@@ -19,16 +22,26 @@ class Test_base_model(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         """Setup model instance to use in the test cases"""
-        cls.p1 = place.Place()
-        cls.p2 = place.Place()
+        cls.u = user.User(email="nyana@hotmail.com", first_name="Nyakato",
+                          password="123ksgy")
+        cls.u.save()
+        cls.s = state.State(name="Uganda")
+        cls.s.save()
+        cls.c = city.City(name="Arua", state_id=cls.s.id)
+        cls.c.save()
+        cls.p1 = place.Place(name="Ghetto", city_id=cls.c.id,
+                             user_id=cls.u.id)
+        cls.p2 = place.Place(name="Kale", city_id=cls.c.id,
+                             user_id=cls.u.id)
         cls.out_dict = cls.p1.to_dict()
         cls.temp_dict = {
-            "city_id": "9089bd19-f489-4540-9ffc-5c60f409d86d",
-            "name": "Arua",
+            "city_id": cls.c.id,
+            "name": "Mvara",
             "__class__": "Place",
             "updated_at": "2017-09-28T21:05:54.119572",
             "id": "b6a6e15c-c67d-4312-9a75-9d084935e579",
             "created_at": "2017-09-28T21:05:54.119427",
+            "user_id": cls.u.id,
         }
         cls.p3 = place.Place(**cls.out_dict)
         cls.p4 = place.Place(**cls.temp_dict)

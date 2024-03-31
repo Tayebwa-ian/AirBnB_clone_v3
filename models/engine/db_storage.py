@@ -12,7 +12,6 @@ from models.user import User
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from os import getenv
-from datetime import datetime
 
 
 if getenv("HBNB_TYPE_STORAGE") == "db":
@@ -26,7 +25,15 @@ class DBStorage:
     """
     __engine = None
     __session = None
-    all_classes = ["State", "City", "User", "Place", "Review"]
+    all_classes = {
+    "User": User,
+    "State": State,
+    "Review": Review,
+    "Place": Place,
+    "City": City,
+    "Amenity": Amenity,
+    }
+
 
     def __init__(self):
         """
@@ -55,9 +62,9 @@ class DBStorage:
             q = self.__session.query(cls).all()
             return(self.to_dict(q))
         else:
-            for c in self.all_classes:
-                c = eval(c)
-                q = self.__session.query(c).all()
+            for key in self.all_classes.keys():
+                c = self.all_classes
+                q = self.__session.query(c[key]).all()
                 result.update(self.to_dict(q))
             return(result)
 
