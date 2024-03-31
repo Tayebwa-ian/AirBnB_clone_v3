@@ -22,7 +22,7 @@ def teardown(self) -> None:
 @app.errorhandler(404)
 def page_not_found(e):
     """json 404 page"""
-    return(jsonify({"Error": "Page Not Found"}), 404)
+    return(jsonify({"Error": "Not Found"}), 404)
 
 
 if __name__ == "__main__":
