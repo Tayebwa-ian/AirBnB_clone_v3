@@ -20,9 +20,14 @@ def teardown(self) -> None:
 
 
 @app.errorhandler(404)
-def page_not_found(e):
+def page_not_found(error):
     """json 404 page"""
-    return(jsonify({"Error": "Not Found"}), 404)
+    return(jsonify({"error": "Not Found"}), 404)
+
+
+@app.errorhandler(400)
+def handle_bad_request(error):
+    return(jsonify({'error': 'Bad request'}), 400)
 
 
 if __name__ == "__main__":

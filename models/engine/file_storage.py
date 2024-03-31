@@ -14,17 +14,6 @@ from ..base_model import BaseModel
 from os import getenv
 
 
-classes = {
-    "User": User,
-    "State": State,
-    "Review": Review,
-    "Place": Place,
-    "City": City,
-    "Amenity": Amenity,
-    "BaseModel": BaseModel,
-    }
-
-
 class FileStorage:
     """
     Description:
@@ -40,6 +29,14 @@ class FileStorage:
     else:
         __file_path = "file.json"
     __objects = {}
+    all_classes = {
+        "User": User,
+        "State": State,
+        "Review": Review,
+        "Place": Place,
+        "City": City,
+        "Amenity": Amenity,
+        }
 
     def all(self, cls=None) -> dict:
         """return a dictionary object of __objects
@@ -56,8 +53,8 @@ class FileStorage:
             return objects
         for key in self.__objects.keys():
             c = key.split(".")[0]
-            if c in classes.keys():
-                objects[key] = classes[c](**self.__objects[key])
+            if c in self.all_classes.keys():
+                objects[key] = self.all_classes[c](**self.__objects[key])
         return objects
 
     def new(self, obj) -> None:
