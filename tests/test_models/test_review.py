@@ -27,7 +27,7 @@ class Test_review(unittest.TestCase):
         cls.u = user.User(email="dora@hotmail.com", first_name="Doreen",
                           password="123hysgy")
         cls.u1 = user.User(email="su@yahoo.com", first_name="Suzan",
-                          password="SenseD0")
+                           password="SenseD0")
         cls.u.save()
         cls.u1.save()
         cls.s = state.State(name="Rwanda")
@@ -35,9 +35,9 @@ class Test_review(unittest.TestCase):
         cls.c = city.City(name="Kigali", state_id=cls.s.id)
         cls.c.save()
         cls.p = place.Place(name="ishina", city_id=cls.c.id,
-                             user_id=cls.u.id)
+                            user_id=cls.u.id)
         cls.p1 = place.Place(name="nyama", city_id=cls.c.id,
-                            user_id=cls.u1.id)
+                             user_id=cls.u1.id)
         cls.p.save()
         cls.p1.save()
         cls.r1 = review.Review(text="A good place", user_id=cls.u.id,
@@ -52,7 +52,7 @@ class Test_review(unittest.TestCase):
             "updated_at": "2017-09-28T21:05:54.119572",
             "id": "b6a6e15c-c67d-4312-9a75-9d084935e579",
             "created_at": "2017-09-28T21:05:54.119427",
-            "place_id":cls.p1.id,
+            "place_id": cls.p1.id,
         }
         cls.r3 = review.Review(**cls.out_dict)
         cls.r4 = review.Review(**cls.temp_dict)

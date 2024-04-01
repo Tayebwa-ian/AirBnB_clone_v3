@@ -17,7 +17,7 @@ if getenv("HBNB_TYPE_STORAGE") == "db":
         def setUpClass(cls) -> None:
             """Setup model instance to use in the test cases"""
             cls.fun_names = [name for name, _ in
-                            inspect.getmembers(db_storage.DBStorage,
+                             inspect.getmembers(db_storage.DBStorage,
                                                 inspect.ismethod)]
             cls.user = User(email="jk@gmail.com", password="@123nn")
             cls.user1 = User(email="tayebwaian@gmail.com",
@@ -40,7 +40,8 @@ if getenv("HBNB_TYPE_STORAGE") == "db":
             data[key] = self.user1
             self.user1.save()
             updated_data = storage.all()
-            self.assertEqual(data, updated_data, "Not all objects in database is returned")
+            self.assertEqual(data, updated_data, "Not all objects in \
+                             database is returned")
 
         def test_database_update(self) -> None:
             """Check if the Database is updated with new obj
@@ -48,8 +49,7 @@ if getenv("HBNB_TYPE_STORAGE") == "db":
             """
             data = storage.all()
             self.user.save()
-            self.assertEqual(len(data) + 1, len(storage.all()),
-                            "")
+            self.assertEqual(len(data) + 1, len(storage.all()))
 
         def test_documentation(self) -> None:
             """Test if module, class and methods documentations exist"""
@@ -58,12 +58,14 @@ if getenv("HBNB_TYPE_STORAGE") == "db":
             for func in self.fun_names:
                 with self.subTest(func):
                     self.assertGreater(len(func.__doc__), 0,
-                                    f"Missing documentation of {func} method")
+                                       f"Missing documentation \
+                                        of {func} method")
 
         def test_pep8_complaince(self) -> None:
             """Check if module is complaint when you run pycodestyle on it"""
             style_checker = pycodestyle.StyleGuide()
-            result = style_checker.check_files(['models/engine/file_storage.py'])
+            result = style_checker.check_files(['models/\
+                                                engine/file_storage.py'])
             self.assertEqual(result.total_errors, 0, "PEP 8 violations found")
 
         def test_get_function(self) -> None:
@@ -72,10 +74,12 @@ if getenv("HBNB_TYPE_STORAGE") == "db":
             obj.save()
             result = storage.get(User, self.user2.id)
             self.assertEqual(obj.id, result.id,
-                            "A single object can not be retrieved")
+                             "A single object can not be retrieved")
 
         def test_count_function(self) -> None:
-            """Check if the correct number of all object in storage is returned"""
+            """
+            Check if the correct number of all object in storage is returned
+            """
             for key in storage.all().keys():
                 storage.all()[key].delete()
             self.user.save()
@@ -84,9 +88,8 @@ if getenv("HBNB_TYPE_STORAGE") == "db":
             self.place.save()
             self.user1.save()
             self.assertEqual(5, len(storage.all()),
-                            "Incorrect count for the number \
+                             "Incorrect count for the number \
                                 of objects in file storage")
-
 
     if __name__ == "__main__":
         unittest.main()

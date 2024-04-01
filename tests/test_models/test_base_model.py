@@ -34,9 +34,9 @@ if getenv("HBNB_TYPE_STORAGE") != "db":
             }
             cls.b3 = base_model.BaseModel(**cls.out_dict)
             cls.b4 = base_model.BaseModel(**cls.temp_dict)
-            cls.fun_names = [name for name, _ in
-                            inspect.getmembers(base_model.BaseModel,
-                                                inspect.ismethod)]
+            functions = inspect.getmembers(base_model.
+                                           BaseModel, inspect.ismethod)
+            cls.fun_names = [name for name, _ in functions]
 
         def test_documentation(self) -> None:
             """Test if module, class and methods documentations exist"""
@@ -45,7 +45,8 @@ if getenv("HBNB_TYPE_STORAGE") != "db":
             for func in self.fun_names:
                 with self.subTest(func):
                     self.assertGreater(len(func.__doc__), 0,
-                                    f"Missing documentation of {func} method")
+                                       f"Missing documentation \
+                                        of {func} method")
 
         def test_public_attrs(self) -> None:
             """
@@ -54,11 +55,11 @@ if getenv("HBNB_TYPE_STORAGE") != "db":
             """
             current_date = datetime.now()
             self.assertAlmostEqual(self.b1.created_at,
-                                current_date,
-                                delta=timedelta(seconds=1))
+                                   current_date,
+                                   delta=timedelta(seconds=1))
             self.assertAlmostEqual(self.b1.updated_at,
-                                current_date,
-                                delta=timedelta(seconds=1))
+                                   current_date,
+                                   delta=timedelta(seconds=1))
             self.assertIsNotNone(self.b2.id)
 
         def test_uuid(self) -> None:
@@ -88,12 +89,12 @@ if getenv("HBNB_TYPE_STORAGE") != "db":
             self.b4.save()
             current_date = datetime.now()
             self.assertAlmostEqual(self.b1.updated_at,
-                                current_date,
-                                delta=timedelta(seconds=1))
+                                   current_date,
+                                   delta=timedelta(seconds=1))
             # test with dict passed as an arg unpon instantiation
             self.assertAlmostEqual(self.b4.updated_at,
-                                current_date,
-                                delta=timedelta(seconds=1))
+                                   current_date,
+                                   delta=timedelta(seconds=1))
 
         def test_to_dict_return_type(self) -> None:
             """check if the return type of to_dict method is a dictionary"""
@@ -153,7 +154,6 @@ if getenv("HBNB_TYPE_STORAGE") != "db":
             style_checker = pycodestyle.StyleGuide()
             result = style_checker.check_files(['models/base_model.py'])
             self.assertEqual(result.total_errors, 0, "PEP 8 violations found")
-
 
     if __name__ == "__main__":
         unittest.main()
