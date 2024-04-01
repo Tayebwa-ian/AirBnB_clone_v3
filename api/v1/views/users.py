@@ -1,0 +1,80 @@
+#!/usr/bin/python3
+"""
+Module contains all routes to users
+"""
+from api.v1.views import app_views
+from flask import jsonify, request, abort
+from models import User, storage
+
+
+@app_views.route("/users/",  methods=['GET', 'POST'])
+@app_views.route("/users/<user_id>",  methods=['GET', 'DELETE', 'PUT'])
+def users(user_id=None):
+    """
+    user endpoints
+        1. retrieve all users
+        2. retrieve a single user by id
+        3. create a new user
+        4. delete a user using and id
+        5. Update a user based on id and values
+    """
+    result = []
+    if request.method == "GET":
+        if user_id:  # retreive a single user
+            user = storage.get(User, user_id)
+            if not user:
+                abort(404)
+            result = user.to_dict()
+        else:  # retrieve all users
+            users = storage.all(User)
+            for key in users.keys():
+                result.append(users[key].to_dict())
+        return(jsonify(result), 200)
+    if request.method == 'DELETE':  # delete a users from the storage
+        user = storage.get(User, user_id)
+        if not user:
+            abort(404)
+        storage.delete(user)
+        return(jsonify({}), 200)
+    if request.method == 'POST':  # create and add a user to the storage
+        try:
+            data = request.get_json()
+        except Exception as e:
+            return(jsonify({"error": "Not a JSON"}), 400)
+        try:
+            email = data['email']
+        except KeyError as e:
+            return(jsonify({"error": "Missing email"}), 400)
+        try:
+            password = data['password']
+        except KeyError as e:
+            return(jsonify({"error": "Missing password"}), 400)
+        user = User(email=email, password=password)
+        user.save()
+        return(jsonify(user.to_dict()), 201)
+    if request.method == "PUT":  # make changes to existing user
+        if user_id:
+            user = storage.get(User, user_id)
+            if not user:
+                abort(404)
+            try:
+                data = request.get_json()
+            except Exception as e:
+                return(jsonify({"error": "Not a JSON"}), 400)
+            try:
+                password = data['password']
+            except KeyError as e:
+                # set password to None if it doesn't exist
+                password = None
+            try:
+                name = data['name']
+            except KeyError as e:
+                # set name to None if it doesn't exist
+                name = None
+            if password:
+                user.password = password
+            if name:
+                user.name = name
+            user.save()
+            temp_dict = user.to_dict()
+            return(jsonify(temp_dict), 200)

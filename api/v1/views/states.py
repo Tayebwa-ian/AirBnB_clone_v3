@@ -47,7 +47,7 @@ def states(state_id=None):
             return(jsonify({"error": "Missing name"}), 400)
         state = State(name=name)
         state.save()
-        return(jsonify(state.to_dict()))
+        return(jsonify(state.to_dict()), 201)
     if request.method == "PUT":  # make changes to existing state
         if state_id:
             state = storage.get(State, state_id)
@@ -64,4 +64,4 @@ def states(state_id=None):
             state.name = name
             state.save()
             temp_dict = state.to_dict()
-            return(jsonify(temp_dict))
+            return(jsonify(temp_dict), 200)

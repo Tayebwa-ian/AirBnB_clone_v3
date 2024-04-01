@@ -52,7 +52,7 @@ def cities(city_id=None, state_id=None):
             return(jsonify({"error": "Missing name"}), 400)
         city = City(name=name, state_id=state.id)
         city.save()
-        return(jsonify(city.to_dict()))
+        return(jsonify(city.to_dict()), 201)
     if request.method == "PUT":  # make changes to existing city
         if city_id:
             city = storage.get(City, city_id)
@@ -69,4 +69,4 @@ def cities(city_id=None, state_id=None):
             city.name = name
             city.save()
             temp_dict = city.to_dict()
-            return(jsonify(temp_dict))
+            return(jsonify(temp_dict), 200)
