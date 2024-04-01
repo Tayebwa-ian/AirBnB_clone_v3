@@ -5,6 +5,9 @@ Module contains all routes to users
 from api.v1.views import app_views
 from flask import jsonify, request, abort
 from models import User, storage
+import hashlib
+
+hash_object = hashlib.md5()
 
 
 @app_views.route("/users/",  methods=['GET', 'POST'])
@@ -47,6 +50,8 @@ def users(user_id=None):
             return(jsonify({"error": "Missing email"}), 400)
         try:
             password = data['password']
+            hash_object.update(password.encode())
+            password = hash_object.hexdigest()
         except KeyError as e:
             return(jsonify({"error": "Missing password"}), 400)
         user = User(email=email, password=password)
@@ -66,6 +71,8 @@ def users(user_id=None):
             first_name = data.get('first_name')
             last_name = data.get('last_name')
             if password:
+                hash_object.update(password.encode())
+                password = hash_object.hexdigest()
                 user.password = password
             if name:
                 user.name = name
