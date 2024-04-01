@@ -12,7 +12,6 @@ from models.user import User
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from os import getenv
-from datetime import datetime
 
 
 if getenv("HBNB_TYPE_STORAGE") == "db":
@@ -26,7 +25,15 @@ class DBStorage:
     """
     __engine = None
     __session = None
-    all_classes = ["State", "City", "User", "Place", "Review"]
+    all_classes = {
+    "User": User,
+    "State": State,
+    "Review": Review,
+    "Place": Place,
+    "City": City,
+    "Amenity": Amenity,
+    }
+
 
     def __init__(self):
         """
@@ -55,9 +62,9 @@ class DBStorage:
             q = self.__session.query(cls).all()
             return(self.to_dict(q))
         else:
-            for c in self.all_classes:
-                c = eval(c)
-                q = self.__session.query(c).all()
+            for key in self.all_classes.keys():
+                c = self.all_classes
+                q = self.__session.query(c[key]).all()
                 result.update(self.to_dict(q))
             return(result)
 
@@ -109,3 +116,26 @@ class DBStorage:
             instance_key = instance.__class__.__name__ + '.' + instance.id
             final[instance_key] = instance
         return(final)
+
+    def get(self, cls, id) -> dict:
+        """retrieve one object based on cls and id
+        Args:
+            cls: class of the object
+            id: Id of the object
+        Return: object based on the class and its ID, or None
+        """
+        q = self.__session.query(cls).filter_by(id=id).one_or_none()
+        if q:
+            return(q)
+
+    def count(self, cls=None) -> int:
+        """count the number of objects in storage:
+        Args:
+            cls: class of the objects
+        Return: number of objects in storage matching the given class
+                if no class is passed,
+                returns the count of all objects in storage.
+        """
+        if cls:
+            return(len(self.all(cls)))
+        return(len(self.all()))

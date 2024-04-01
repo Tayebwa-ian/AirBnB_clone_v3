@@ -20,8 +20,8 @@ class Test_amenity(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         """Setup model instance to use in the test cases"""
-        cls.a1 = amenity.Amenity()
-        cls.a2 = amenity.Amenity()
+        cls.a1 = amenity.Amenity(name="TV")
+        cls.a2 = amenity.Amenity(name="wifi")
         cls.out_dict = cls.a1.to_dict()
         cls.temp_dict = {
             "name": "Swimming Pool",
@@ -29,6 +29,7 @@ class Test_amenity(unittest.TestCase):
             "updated_at": "2017-09-28T21:05:54.119572",
             "id": "b6a6e15c-c67d-4312-9a75-9d084935e579",
             "created_at": "2017-09-28T21:05:54.119427",
+            "name": "Kitchen"
         }
         cls.a3 = amenity.Amenity(**cls.out_dict)
         cls.a4 = amenity.Amenity(**cls.temp_dict)

@@ -18,8 +18,10 @@ class Test_user(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         """Setup model instance to use in the test cases"""
-        cls.u1 = user.User()
-        cls.u2 = user.User()
+        cls.u1 = user.User(email="markd@muni.ac.ug", first_name="Donald",
+                           password="Calme342@")
+        cls.u2 = user.User(email="Mutyaba@gfa.org", first_name="Ibra",
+                           password="DoyourWork#124")
         cls.out_dict = cls.u1.to_dict()
         cls.temp_dict = {
             "age": 56,
@@ -28,6 +30,8 @@ class Test_user(unittest.TestCase):
             "updated_at": "2017-09-28T21:05:54.119572",
             "id": "b6a6e15c-c67d-4312-9a75-9d084935e579",
             "created_at": "2017-09-28T21:05:54.119427",
+            "email": "deno@gmail.com",
+            "password": "COYG@deno",
         }
         cls.u3 = user.User(**cls.out_dict)
         cls.u4 = user.User(**cls.temp_dict)

@@ -14,17 +14,6 @@ from ..base_model import BaseModel
 from os import getenv
 
 
-classes = {
-    "User": User,
-    "State": State,
-    "Review": Review,
-    "Place": Place,
-    "City": City,
-    "Amenity": Amenity,
-    "BaseModel": BaseModel,
-    }
-
-
 class FileStorage:
     """
     Description:
@@ -35,8 +24,19 @@ class FileStorage:
         __objects: dictionary - empty but will store all objects
                     by <class name>.id
     """
-    __file_path = "file.json"
+    if getenv("HBNB_TYPE_STORAGE"):
+        __file_path = getenv("HBNB_TYPE_STORAGE")
+    else:
+        __file_path = "file.json"
     __objects = {}
+    all_classes = {
+        "User": User,
+        "State": State,
+        "Review": Review,
+        "Place": Place,
+        "City": City,
+        "Amenity": Amenity,
+        }
 
     def all(self, cls=None) -> dict:
         """return a dictionary object of __objects
@@ -53,8 +53,8 @@ class FileStorage:
             return objects
         for key in self.__objects.keys():
             c = key.split(".")[0]
-            if c in classes.keys():
-                objects[key] = classes[c](**self.__objects[key])
+            if c in self.all_classes.keys():
+                objects[key] = self.all_classes[c](**self.__objects[key])
         return objects
 
     def new(self, obj) -> None:
@@ -103,3 +103,27 @@ class FileStorage:
         Return: None
         """
         self.reload()
+
+    def get(self, cls, id) -> dict:
+        """retrieve one object based on cls and id
+        Args:
+            cls: class of the object
+            id: Id of the object
+        Return: object based on the class and its ID, or None
+        """
+        for key in self.__objects.keys():
+            values = key.split(".")
+            if values[0] == cls.__name__ and values[1] == id:
+                return(cls(**self.__objects[key]))
+
+    def count(self, cls=None) -> int:
+        """count the number of objects in storage:
+        Args:
+            cls: class of the objects
+        Return: number of objects in storage matching the given class
+                if no class is passed,
+                returns the count of all objects in storage.
+        """
+        if cls:
+            return(len(self.all(cls)))
+        return(len(self.all()))

@@ -9,6 +9,7 @@ import inspect
 import models
 
 city = models.city
+state = models.state
 
 
 class Test_city(unittest.TestCase):
@@ -20,16 +21,18 @@ class Test_city(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         """Setup model instance to use in the test cases"""
-        cls.c1 = city.City()
-        cls.c2 = city.City()
+        cls.state1 = state.State(name="Kenya")
+        cls.state1.save()
+        cls.c1 = city.City(name="Nariobi", state_id=cls.state1.id)
+        cls.c2 = city.City(name="Mombasa", state_id=cls.state1.id)
         cls.out_dict = cls.c1.to_dict()
         cls.temp_dict = {
-            "state_id": "9089bd19-f489-4540-9ffc-5c60f409d86d",
-            "name": "Mbarara",
+            "name": "Naivasha",
             "__class__": "City",
             "updated_at": "2017-09-28T21:05:54.119572",
             "id": "b6a6e15c-c67d-4312-9a75-9d084935e579",
             "created_at": "2017-09-28T21:05:54.119427",
+            "state_id": cls.state1.id,
         }
         cls.c3 = city.City(**cls.out_dict)
         cls.c4 = city.City(**cls.temp_dict)
