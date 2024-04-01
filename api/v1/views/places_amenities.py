@@ -1,77 +1,86 @@
 #!/usr/bin/python3
-"""
-Module contains all routes to places
-"""
+""" Places amenities routes handler """
 from api.v1.views import app_views
-from flask import jsonify, request, abort
-from models import City, Place, storage
+from flask import jsonify, abort, request
+from models import storage
+from models import place
+from models import amenity
 
 
-@app_views.route("/places/<city_id>/places",  methods=['GET', 'POST'])
-@app_views.route("/places/<place_id>",  methods=['GET', 'DELETE', 'PUT'])
-def places(place_id=None, city_id=None):
+def do_check_id(cls, amenity_id):
     """
-    place endpoints
-        1. retrieve all places in a specific place
-        2. retrieve a single place by id
-        3. create a new place
-        4. delete a place using and id
-        5. Update a place based on id and values
+    If the cls is not linked to any Cls object, raise a 404 error
     """
-    result = []
-    if request.method == "GET":
-        if place_id:  # retreive a single place
-            place = storage.get(Place, place_id)
-            if not place:
-                abort(404)
-            result = place.to_dict()
-        elif city_id:  # retrieve all places related to a specific place
-            city = storage.get(City, city_id)
-            if not city:
-                abort(404)
-            places = city.places
-            for place in places:
-                result.append(place.to_dict())
-        return(jsonify(result), 200)
-    if request.method == 'DELETE':  # delete a places from the storage
-        place = storage.get(Place, place_id)
-        if not place:
-            abort(404)
-        storage.delete(place)
-        return(jsonify({}), 200)
-    if request.method == 'POST' and city_id:
-        # create and add a place to the storage
-        city = storage.get(City, city_id)
-        try:
-            data = request.get_json()
-        except Exception as e:
-            return(jsonify({"error": "Not a JSON"}), 400)
-        try:
-            name = data['name']
-        except KeyError as e:
-            return(jsonify({"error": "Missing name"}), 400)
-        try:
-            user_id = data['user_id']
-        except KeyError as e:
-            return(jsonify({"error": "Missing user_id"}), 400)
-        place = Place(name=name, city_id=city.id, user_id=user_id)
-        place.save()
-        return(jsonify(place.to_dict()), 201)
-    if request.method == "PUT":  # make changes to existing place
-        if place_id:
-            place = storage.get(Place, place_id)
-            if not place:
-                abort(404)
-            try:
-                data = request.get_json()
-            except Exception as e:
-                return(jsonify({"error": "Not a JSON"}), 400)
-            name = data.get('name')
-            description = data.get('description')
-            if name:
-                place.name = name
-            if description:
-                place.description = description
-            place.save()
-            temp_dict = place.to_dict()
-            return(jsonify(temp_dict), 200)
+    try:
+        get_amenity = storage.get(cls, amenity_id)
+        get_amenity.to_dict()
+    except Exception:
+        abort(404)
+    return get_amenity
+
+
+def do_get_amenities(place_id):
+    """
+       Retrieves the list of all Amenity objects
+       if amenity_id is not none get a Amenity object
+    """
+    do_check_id(place.Place, place_id)
+    my_place = storage.get(place.Place, place_id)
+    try:
+        all_amenities = my_place.amenities
+    except Exception:
+        abort(404)
+    amenities = []
+    for c in all_amenities:
+        amenities.append(c.to_dict())
+    return jsonify(amenities)
+
+
+def do_delete_amenity(place_id, amenity_id):
+    """
+        Deletes the link between Amenity object and a Place
+        Return: an empty dictionary with the status code 200
+    """
+    my_place = do_check_id(place.Place, place_id)
+    do_check_id(amenity.Amenity, amenity_id)
+    for i in range(len(my_place.amenities)):
+        if (my_place.amenities[i].id == amenity_id):
+            del(my_place.amenities[i])
+            storage.save()
+            response = {}
+            return jsonify(response), 200
+    abort(404)
+
+
+def do_create_amenity(place_id, amenity_id):
+    """
+        Links a amenity object
+        Return: linked amenity object
+    """
+    my_place = do_check_id(place.Place, place_id)
+    get_amenity = do_check_id(amenity.Amenity, amenity_id)
+    for i in range(len(my_place.amenities)):
+        if (my_place.amenities[i].id == amenity_id):
+            return jsonify(get_amenity.to_dict()), 200
+    my_place.amenities.append(get_amenity)
+    storage.save()
+    return jsonify(get_amenity.to_dict()), 201
+
+
+@app_views.route('/places/<place_id>/amenities',
+                 methods=['GET'],
+                 defaults={'amenity_id': None},
+                 strict_slashes=False)
+@app_views.route('/places/<place_id>/amenities/<amenity_id>',
+                 methods=['DELETE', 'POST'],
+                 strict_slashes=False)
+def places_amenities(place_id, amenity_id):
+    """
+        Handle amenities requests with needed functions
+    """
+    if (request.method == "GET"):
+        return do_get_amenities(place_id)
+    elif (request.method == "DELETE"):
+        return do_delete_amenity(place_id, amenity_id)
+    elif (request.method == "POST"):
+        return do_create_amenity(place_id, amenity_id)
