@@ -62,11 +62,9 @@ def cities(city_id=None, state_id=None):
                 data = request.get_json()
             except Exception as e:
                 return(jsonify({"error": "Not a JSON"}), 400)
-            try:
-                name = data['name']
-            except KeyError as e:
-                return(jsonify({"error": "Missing name"}), 400)
-            city.name = name
+            name = data.get('name')
+            if name:
+                city.name = name
             city.save()
             temp_dict = city.to_dict()
             return(jsonify(temp_dict), 200)

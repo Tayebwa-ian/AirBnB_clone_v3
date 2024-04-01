@@ -61,20 +61,18 @@ def users(user_id=None):
                 data = request.get_json()
             except Exception as e:
                 return(jsonify({"error": "Not a JSON"}), 400)
-            try:
-                password = data['password']
-            except KeyError as e:
-                # set password to None if it doesn't exist
-                password = None
-            try:
-                name = data['name']
-            except KeyError as e:
-                # set name to None if it doesn't exist
-                name = None
+            password = data.get('password')
+            name = data.get('name')
+            first_name = data.get('first_name')
+            last_name = data.get('last_name')
             if password:
                 user.password = password
             if name:
                 user.name = name
+            if first_name:
+                user.first_name = first_name
+            if last_name:
+                user.last_name = last_name
             user.save()
             temp_dict = user.to_dict()
             return(jsonify(temp_dict), 200)
