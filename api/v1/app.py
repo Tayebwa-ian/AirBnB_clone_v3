@@ -29,6 +29,7 @@ def page_not_found(error):
 
 @app.errorhandler(400)
 def handle_bad_request(error):
+    """json 400 page"""
     return(jsonify({'error': 'Bad request'}), 400)
 
 
