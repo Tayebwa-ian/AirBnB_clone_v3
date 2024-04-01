@@ -7,9 +7,9 @@ from flask import jsonify, request, abort
 from models import State, storage
 
 
-@app_views.route("/states",  methods=['GET', 'POST'])
-@app_views.route("/states/<str:state_id>",  methods=['GET', 'DELETE', 'PUT'])
-def states(state_id):
+@app_views.route("/states/",  methods=['GET', 'POST'])
+@app_views.route("/states/<state_id>",  methods=['GET', 'DELETE', 'PUT'])
+def states(state_id=None):
     """
     State endpoints
         1. retrieve all states
@@ -18,25 +18,25 @@ def states(state_id):
         4. delete a state using and id
         5. Update a state based on id and values
     """
-    result = {}
+    result = []
     if request.method == "GET":
-        if state_id:
+        if state_id:  # retreive a single state
             state = storage.get(State, state_id)
             if not state:
                 abort(404)
             result = state.to_dict()
-        else:
+        else:  # retrieve all states
             states = storage.all(State)
             for key in states.keys():
-                result[key] = states[key].to_dict()
+                result.append(states[key].to_dict())
         return(jsonify(result), 200)
-    if request.method == 'DELETE':
+    if request.method == 'DELETE':  # delete a states from the storage
         state = storage.get(State, state_id)
         if not state:
             abort(404)
         storage.delete(state)
-        return(jsonify(result), 200)
-    if request.method == 'POST':
+        return(jsonify({}), 200)
+    if request.method == 'POST':  # create and add a state to the storage
         try:
             data = request.get_json()
         except Exception as e:
@@ -48,7 +48,7 @@ def states(state_id):
         state = State(name=name)
         state.save()
         return(jsonify(state.to_dict()))
-    if request.method == "PUT":
+    if request.method == "PUT":  # make changes to existing state
         if state_id:
             state = storage.get(State, state_id)
             if not state:
@@ -61,7 +61,7 @@ def states(state_id):
                 name = data['name']
             except KeyError as e:
                 return(jsonify({"error": "Missing name"}), 400)
+            state.name = name
+            state.save()
             temp_dict = state.to_dict()
-            temp_dict['name'] = name
-            updated_state = State(**temp_dict)
-            return(jsonify(updated_state.to_dict()))
+            return(jsonify(temp_dict))

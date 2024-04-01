@@ -12,6 +12,7 @@ def status():
     """Endpoint returning status of the app"""
     return(jsonify({"status": "OK"}))
 
+
 @app_views.route("/stats")
 def stats():
     """
