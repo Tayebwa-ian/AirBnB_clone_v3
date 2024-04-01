@@ -34,12 +34,6 @@ def handle_bad_request(error):
 
 
 if __name__ == "__main__":
-    if getenv("HBNB_API_HOST"):
-        host = getenv("HBNB_API_HOST")
-    else:
-        host = "0.0.0.0"
-    if getenv("HBNB_API_PORT"):
-        port = int(getenv("HBNB_API_PORT"))
-    else:
-        port = 5000
-    app.run(host, port=port, threaded=True)
+    host = getenv("HBNB_API_HOST", "0.0.0.0")
+    port = int(getenv("HBNB_API_PORT", "5000"))
+    app.run(host, port=port, threaded=True, debug=True)
