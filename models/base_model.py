@@ -109,6 +109,8 @@ class BaseModel:
                 dict_obj[key] = datetime.isoformat(self_dict[key])
             elif key == "_sa_instance_state":
                 continue
+            elif key == "password" and getenv('HBNB_TYPE_STORAGE') == 'db':
+                continue
             else:
                 dict_obj[key] = self_dict[key]
         # add key __class__ with the class name of the object
