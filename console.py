@@ -27,6 +27,7 @@ class HBNBCommand(cmd.Cmd):
     """Customised AirBnB console (command prompt)
     Description:
         Functions under this class run several commands input via the prompt
+        or console
     """
     prompt = "(hbnb) "
 
