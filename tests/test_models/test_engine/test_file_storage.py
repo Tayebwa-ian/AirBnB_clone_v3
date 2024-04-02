@@ -51,8 +51,8 @@ if getenv("HBNB_TYPE_STORAGE") != "db":
             for func in self.fun_names:
                 with self.subTest(func):
                     self.assertGreater(len(func.__doc__), 0,
-                                       f"Missing documentation \
-                                        of {func} method")
+                                       "Missing documentation \
+                                        of {} method".format(func))
 
         def test_pep8_complaince(self) -> None:
             """Check if module is complaint when you run pycodestyle on it"""

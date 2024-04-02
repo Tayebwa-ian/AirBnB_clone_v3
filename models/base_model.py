@@ -126,5 +126,6 @@ class BaseModel:
         self_dict = self.__dict__
         if "_sa_instance_state" in self_dict:
             del self_dict['_sa_instance_state']
-        rep = f"[{self.__class__.__name__}] ({self.id}) {self_dict}"
+        rep = "[{}] ({}) {}".format(self.__class__.__name__,
+                                    self.id, self_dict)
         return(rep)

@@ -67,7 +67,8 @@ class Test_review(unittest.TestCase):
         for func in self.fun_names:
             with self.subTest(func):
                 self.assertGreater(len(func.__doc__), 0,
-                                   f"Missing documentation of {func} method")
+                                   "Missing documentation of {} method".
+                                   format(func))
 
     def test_public_attrs(self) -> None:
         """
