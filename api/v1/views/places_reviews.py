@@ -45,15 +45,15 @@ def reviews(review_id=None, place_id=None):
         try:
             data = request.get_json()
         except Exception as e:
-            return(jsonify({"error": "Not a JSON"}), 400)
+            abort(400, "Not a JSON")
         try:
             text = data['text']
         except KeyError as e:
-            return(jsonify({"error": "Missing name"}), 400)
+            abort(400, "Missing name")
         try:
             user_id = data['user_id']
         except KeyError as e:
-            return(jsonify({"error": "Missing user_id"}), 400)
+            abort(400, "Missing user_id")
         review = Review(text=text, place_id=place.id, user_id=user_id)
         review.save()
         return(jsonify(review.to_dict()), 201)
@@ -65,7 +65,7 @@ def reviews(review_id=None, place_id=None):
             try:
                 data = request.get_json()
             except Exception as e:
-                return(jsonify({"error": "Not a JSON"}), 400)
+                abort(400, "Not a JSON")
             text = data.get('text')
             if text:
                 review.text = text

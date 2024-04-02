@@ -45,15 +45,15 @@ def places(place_id=None, city_id=None):
         try:
             data = request.get_json()
         except Exception as e:
-            return(jsonify({"error": "Not a JSON"}), 400)
+            abort(400, "Not a JSON")
         try:
             name = data['name']
         except KeyError as e:
-            return(jsonify({"error": "Missing name"}), 400)
+            abort(400, "Missing name")
         try:
             user_id = data['user_id']
         except KeyError as e:
-            return(jsonify({"error": "Missing user_id"}), 400)
+            abort(400, "Missing user_id")
         place = Place(name=name, city_id=city.id, user_id=user_id)
         place.save()
         return(jsonify(place.to_dict()), 201)
@@ -65,7 +65,7 @@ def places(place_id=None, city_id=None):
             try:
                 data = request.get_json()
             except Exception as e:
-                return(jsonify({"error": "Not a JSON"}), 400)
+                abort(400, "Not a JSON")
             name = data.get('name')
             description = data.get('description')
             number_rooms = int(data.get('number_rooms'))

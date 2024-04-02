@@ -43,17 +43,17 @@ def users(user_id=None):
         try:
             data = request.get_json()
         except Exception as e:
-            return(jsonify({"error": "Not a JSON"}), 400)
+            abort(400, "Not a JSON")
         try:
             email = data['email']
         except KeyError as e:
-            return(jsonify({"error": "Missing email"}), 400)
+            abort(400, "Missing email")
         try:
             password = data['password']
             hash_object.update(password.encode())
             password = hash_object.hexdigest()
         except KeyError as e:
-            return(jsonify({"error": "Missing password"}), 400)
+            abort(400, "Missing password")
         user = User(email=email, password=password)
         user.save()
         return(jsonify(user.to_dict()), 201)
@@ -65,7 +65,7 @@ def users(user_id=None):
             try:
                 data = request.get_json()
             except Exception as e:
-                return(jsonify({"error": "Not a JSON"}), 400)
+                abort(400, "Not a JSON")
             password = data.get('password')
             name = data.get('name')
             first_name = data.get('first_name')

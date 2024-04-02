@@ -40,11 +40,11 @@ def amenitys(amenity_id=None):
         try:
             data = request.get_json()
         except Exception as e:
-            return(jsonify({"error": "Not a JSON"}), 400)
+            abort(400, "Not a JSON")
         try:
             name = data['name']
         except KeyError as e:
-            return(jsonify({"error": "Missing name"}), 400)
+            abort(400, "Missing name")
         amenity = Amenity(name=name)
         amenity.save()
         return(jsonify(amenity.to_dict()), 201)
@@ -56,7 +56,7 @@ def amenitys(amenity_id=None):
             try:
                 data = request.get_json()
             except Exception as e:
-                return(jsonify({"error": "Not a JSON"}), 400)
+                abort(400, 'Not a JSON')
             name = data.get('name')
             if name:
                 amenity.name = name
