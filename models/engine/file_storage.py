@@ -36,6 +36,7 @@ class FileStorage:
         "Place": Place,
         "City": City,
         "Amenity": Amenity,
+        "BaseModel": BaseModel,
         }
 
     def all(self, cls=None) -> dict:

@@ -57,8 +57,8 @@ if getenv("HBNB_TYPE_STORAGE") != "db":
         def test_pep8_complaince(self) -> None:
             """Check if module is complaint when you run pycodestyle on it"""
             style_checker = pycodestyle.StyleGuide()
-            result = style_checker.check_files(['models/\
-                                                engine/file_storage.py'])
+            result = style_checker.check_files([
+                'models/engine/file_storage.py'])
             self.assertEqual(result.total_errors, 0, "PEP 8 violations found")
 
         def test_get_function(self) -> None:
