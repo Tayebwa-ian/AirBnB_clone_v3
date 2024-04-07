@@ -18,8 +18,38 @@ $('document').ready(function () {
       success: appendPlaces
     });
   
+    let states = {};
+    $('.locations > ul > H2 > input[type="checkbox"]').change(function () {
+      if ($(this).is(':checked')) {
+        states[$(this).attr('data-id')] = $(this).attr('data-name');
+      } else {
+        delete states[$(this).attr('data-id')];
+      }
+      const locations = Object.assign({}, states, cities);
+      if (Object.values(locations).length === 0) {
+        $('.locations h4').html('&nbsp;');
+      } else {
+        $('.locations h4').text(Object.values(locations).join(', '));
+      }
+    });
+  
+    let cities = {};
+    $('.locations > ul > ul > li input[type="checkbox"]').change(function () {
+      if ($(this).is(':checked')) {
+        cities[$(this).attr('data-id')] = $(this).attr('data-name');
+      } else {
+        delete cities[$(this).attr('data-id')];
+      }
+      const locations = Object.assign({}, states, cities);
+      if (Object.values(locations).length === 0) {
+        $('.locations h4').html('&nbsp;');
+      } else {
+        $('.locations h4').text(Object.values(locations).join(', '));
+      }
+    });
+  
     let amenities = {};
-    $('input[type="checkbox"]').change(function () {
+    $('.amenities input[type="checkbox"]').change(function () {
       if ($(this).is(':checked')) {
         amenities[$(this).attr('data-id')] = $(this).attr('data-name');
       } else {
@@ -36,7 +66,11 @@ $('document').ready(function () {
       $.ajax({
         url: api + ':5001/api/v1/places_search/',
         type: 'POST',
-        data: JSON.stringify({ 'amenities': Object.keys(amenities) }),
+        data: JSON.stringify({
+          'states': Object.keys(states),
+          'cities': Object.keys(cities),
+          'amenities': Object.keys(amenities)
+        }),
         contentType: 'application/json',
         dataType: 'json',
         success: appendPlaces
@@ -47,7 +81,7 @@ $('document').ready(function () {
   function appendPlaces (data) {
     $('section.places').empty();
     $('section.places').append(data.map(place => {
-      return `<article>
+      return `<ARTICLE>
                 <div class="title">
                   <H2>${place.name}</H2>
                     <div class="price_by_night">
@@ -74,6 +108,6 @@ $('document').ready(function () {
                   <div class="description">
                     ${place.description}
                   </div>
-                </article>`;
+                </ARTICLE>`;
     }));
   }
