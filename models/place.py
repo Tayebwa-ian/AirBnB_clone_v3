@@ -76,17 +76,17 @@ class Place(BaseModel, Base):
                     reviewlist.append(review)
             return(reviewlist)
 
-        @property
-        def amenities(self) -> list:
-            """ Get Linked Amenities"""
-            amenitylist = []
-            for amenity in list(models.storage.all(Amenity).values()):
-                if amenity.id in self.amenity_ids:
-                    amenitylist.append(amenity)
-            return(amenitylist)
+    @property
+    def amenities(self) -> list:
+        """ Get Linked Amenities"""
+        amenitylist = []
+        for amenity in list(models.storage.all(Amenity).values()):
+            if amenity.id in self.amenity_ids:
+                amenitylist.append(amenity)
+        return(amenitylist)
 
-        @amenities.setter
-        def amenities(self, value) -> None:
-            """Set amenity_ids attribute"""
-            if type(value) == Amenity:
-                self.amenity_ids.append(value.id)
+    @amenities.setter
+    def amenities(self, value) -> None:
+        """Set amenity_ids attribute"""
+        if type(value) == Amenity:
+            self.amenity_ids.append(value.id)

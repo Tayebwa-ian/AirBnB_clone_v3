@@ -10,15 +10,17 @@ header {
     background-position: left;
     margin-left: 20px;
 }
-
 #api_status {
-    border-radius: 50%;
-    background-color: #ccc;
-    height: 40px;
-    margin-right: 20px;
     width: 40px;
-  }
-  
+    height: 40px;
+    border-radius: 100%;
+    background: #CCCCCC;
+    float: right;
+    margin-right: 30px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
 #api_status.available {
     background-color: #ff545f;
 }
