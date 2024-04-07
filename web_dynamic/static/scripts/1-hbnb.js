@@ -7,9 +7,9 @@ $('document').ready(function () {
         delete amenities[$(this).attr('data-id')];
       }
       if (Object.values(amenities).length === 0) {
-        $('.amenities H4').html('&nbsp;');
+        $('.amenities h4').html('&nbsp;');
       } else {
-        $('.amenities H4').text(Object.values(amenities).join(', '));
+        $('.amenities h4').text(Object.values(amenities).join(', '));
       }
     });
   });
