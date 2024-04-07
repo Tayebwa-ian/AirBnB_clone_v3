@@ -1,7 +1,7 @@
 $('document').ready(function () {
-    const api = 'http://' + window.location.hostname;
+    const url = 'http://' + window.location.hostname + ':5001/api/v1/status/';
   
-    $.get(api + ':5001:/api/v1/status/', function (response) {
+    $.get(url, function (response) {
       if (response.status === 'OK') {
         $('div#api_status').addClass('available');
       } else {
@@ -19,7 +19,7 @@ $('document').ready(function () {
     });
   
     let amenities = {};
-    $('INPUT[type="checkbox"]').change(function () {
+    $('input[type="checkbox"]').change(function () {
       if ($(this).is(':checked')) {
         amenities[$(this).attr('data-id')] = $(this).attr('data-name');
       } else {
@@ -32,7 +32,7 @@ $('document').ready(function () {
       }
     });
   
-    $('BUTTON').click(function () {
+    $('button').click(function () {
       $.ajax({
         url: api + ':5001/api/v1/places_search/',
         type: 'POST',

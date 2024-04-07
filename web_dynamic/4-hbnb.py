@@ -35,7 +35,7 @@ def hbnb_filters():
     cache_id = (str(uuid.uuid4()))
     return render_template('4-hbnb.html',
                            states=states,
-                           amens=amens,
+                           amenities=amens,
                            places=places,
                            users=users,
                            cache_id=cache_id)
