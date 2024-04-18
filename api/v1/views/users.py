@@ -10,7 +10,7 @@ import hashlib
 hash_object = hashlib.md5()
 
 
-@app_views.route("/users/",  methods=['GET', 'POST'])
+@app_views.route("/users",  methods=['GET', 'POST'])
 @app_views.route("/users/<user_id>",  methods=['GET', 'DELETE', 'PUT'])
 def users(user_id=None):
     """

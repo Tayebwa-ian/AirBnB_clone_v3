@@ -7,7 +7,7 @@ from flask import jsonify, request, abort
 from models import Amenity, storage
 
 
-@app_views.route("/amenities/",  methods=['GET', 'POST'])
+@app_views.route("/amenities",  methods=['GET', 'POST'])
 @app_views.route("/amenities/<amenity_id>",  methods=['GET', 'DELETE', 'PUT'])
 def amenitys(amenity_id=None):
     """
